@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "A pharmacy app",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "Personal",
@@ -16,6 +17,7 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "nodemon": "^3.1.14",
     "prettier": "^3.8.3"
   }
 }
