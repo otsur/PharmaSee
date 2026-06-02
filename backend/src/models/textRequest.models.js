@@ -1,20 +1,17 @@
 import mongoose, {Schema} from "mongoose";
 
-const postSchema = new Schema(
+const textRequestSchema = new Schema(
     {
         owner: {
             type: Schema.Types.ObjectId,
             ref: "Customer"
         },
-        content: {
+        description: {
             type: String,
             required: true
         },
         status: {
             type: Boolean
-        },
-        description: {
-            type: String
         }
     },
     {
@@ -22,4 +19,4 @@ const postSchema = new Schema(
     }
 )
 
-export const Post = mongoose.model("Post", postSchema)
+export const TextRequest = mongoose.model("TextRequest", textRequestSchema)

@@ -34,6 +34,11 @@ const doctorSchema = new Schema(
             type: Boolean,
             default: true
         },
+        appointmentCost: {
+            type: Number,
+            required: true,
+            trim: true
+        },
         arrivaltTime: {
             type: Date,
             required: true

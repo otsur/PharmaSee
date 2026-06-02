@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 const testSchema = new Schema(
     {
@@ -12,6 +12,10 @@ const testSchema = new Schema(
         },
         description: {
             type: String,
+            required: true
+        },
+        bookingCost: {
+            type: Number,
             required: true
         }
     },
