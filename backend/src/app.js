@@ -16,6 +16,9 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
+// customer api endpoints
+import customerRouter from "./routes/customer.routes.js";
 
+app.use("/api/v1/customers", customerRouter)
 
 export {app}

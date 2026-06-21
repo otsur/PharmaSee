@@ -95,6 +95,7 @@ storeSchema.methods.generateAccessToken = function() {
                 _id: this._id,
                 username: this.username,
                 emai: this.email,
+                role: "store",
                 phoneNumber: this.phoneNumber
             },
             process.env.ACCESS_TOKEN_SECRET,

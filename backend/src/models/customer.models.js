@@ -62,6 +62,7 @@ customerSchema.methods.generateAccessToken = function () {
         {
             _id: this._id,
             username: this.username,
+            role: "customer",
             phoneNumber: this.phoneNumber,
             email: this.email
         },
