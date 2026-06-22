@@ -4,13 +4,16 @@ import jwt from "jsonwebtoken";
 import { Customer } from "../models/customer.models.js";
 import { Store } from "../models/store.models.js";
 
-export const verifyJWT = asyncHandler( async(req, res) => {
+export const verifyJWT = asyncHandler( async(req, res, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
 
         if(!token) {
             throw new ApiError(401, "Unauthorized request")
         }
+
+        //console.log(token)
+        //console.log("Type:", typeof token)
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
 

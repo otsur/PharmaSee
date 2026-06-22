@@ -41,11 +41,11 @@ const storeSchema = new Schema(
             }
         ],
         openTime: {
-            type: Date,
+            type: String,
             required: true
         },
         closeTime: {
-            type: Date,
+            type: String,
             required: true
         },
         location: {
@@ -78,11 +78,10 @@ const storeSchema = new Schema(
     }
 )
 
-storeSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) return next();
+storeSchema.pre("save", async function () {
+    if(!this.isModified("password")) return;
 
-    this.password = bcrypt.hash(this.password, 10);
-    next();
+    this.password = await bcrypt.hash(this.password, 10);
 })
 
 storeSchema.methods.isPasswordCorrect = async function (password) {

@@ -63,7 +63,7 @@ const registerUser = asyncHandler( async (req, res) => {
     let avatarLocalPath;
 
     if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length > 0) {
-        avatar = req.files.avatar[0].path
+        avatarLocalPath = req.files.avatar[0].path
     }
     
     const avatar = await uploadOnCloudinary(avatarLocalPath)
@@ -108,6 +108,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const isPasswordValid = await customer.isPasswordCorrect(password)
+    //console.log(isPasswordValid)
 
     if(!isPasswordValid) {
         throw new ApiError(401, "Incorrect password")
@@ -128,7 +129,7 @@ const loginUser = asyncHandler(async (req, res) => {
               .json( new ApiResponse(
                             200,
                             {
-                                user: loggedInUser, accessToken, refreshToken
+                                customer: loggedInUser, accessToken, refreshToken
                             },
                             "User logged in Successfully"
                         ))
@@ -153,8 +154,8 @@ const logoutUser = asyncHandler( async (req, res) => {
     }
 
     return res.status(200)
-              .cookie("accessToken", options)
-              .cookie("refreshToken", options)
+              .clearCookie("accessToken", options)
+              .clearCookie("refreshToken", options)
               .json( new ApiResponse(200, {}, "User logged out"))
 })
 
@@ -215,9 +216,9 @@ const changeCurrentPassword = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Invalid password")
     }
 
-    user.password = newPassword
+    customer.password = newPassword
 
-    await user.save({validateBeforeSave: false})
+    await customer.save({validateBeforeSave: false})
 
     return res.status(200)
               .json(new ApiResponse(
@@ -238,9 +239,9 @@ const getCurrentCustomer = asyncHandler( async(req, res) => {
 })
 
 const updateAccountDetails = asyncHandler( async(req, res) => {
-    const {fullName, email} = req.body
+    const {fullName, email, phoneNumber} = req.body
 
-    if(!fullName || !email) {
+    if(!fullName || !email || !phoneNumber) {
         throw new ApiError(400, "All the fields are required")
     }
 
@@ -249,7 +250,8 @@ const updateAccountDetails = asyncHandler( async(req, res) => {
         {
             $set: {
                 fullName,
-                email
+                email,
+                phoneNumber
             }
         },
         {
