@@ -21,11 +21,12 @@ const doctorSchema = new Schema(
         },
         avatar: {
             type: String,
-            required: true
+            //required: true
         },
         degree: {
             type: String,
             required: true,
+            enum: ["MBBS", "MD", "MS", "DM", "BDS", "other"]
         },
         speciality: {
             type: String
@@ -40,12 +41,16 @@ const doctorSchema = new Schema(
             trim: true
         },
         arrivaltTime: {
-            type: Date,
+            type: String,
             required: true
         },
         departureTime: {
-            type: Date,
+            type: String,
             required: true
+        },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: Store
         }
     },
     {

@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Store } from "../models/store.models.js";
+import { Doctor } from "../models/doctor.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
@@ -113,13 +114,7 @@ const loginUser = asyncHandler( async(req, res) => {
         throw new ApiError(400, "Store doesn't exist")
     }
 
-    store.ownerName = "hiii";
-    await store.save({validateBeforeSave: false});
-
     const isPasswordValid = await store.isPasswordCorrect(password)
-    console.log(password);
-    console.log(store.password);
-    
     
     if(!isPasswordValid){
         throw new ApiError(400, "Incorrect password")
@@ -140,7 +135,7 @@ const loginUser = asyncHandler( async(req, res) => {
               .json( new ApiResponse(
                 200,
                 {
-                    store: loggeedInUser, accessToken, refreshToken
+                    store: loggedInUser, accessToken, refreshToken
                 },
                 "User logged in successfully"
               ))
@@ -223,10 +218,12 @@ const refreshAccessToken = asyncHandler( async(req, res) => {
 
 const changeCurrentPassword = asyncHandler( async (req, res) => {
     const {oldPassword, newPassword} = req.body
+    console.log("reached here");
+    
 
     const store = await Store.findById(req.user?._id) 
 
-    const isPasswordCorrect = await customer.isPasswordCorrect(oldPassword)
+    const isPasswordCorrect = await store.isPasswordCorrect(oldPassword)
 
     if(!isPasswordCorrect){
         throw new ApiError(400, "Invalid password")
@@ -387,6 +384,25 @@ const updateStoreDetails = asyncHandler( async(req, res) => {
               ))
 })
 
+const getDoctors = asyncHandler( async(req, res) => {
+    const {storeId} = req.params;
+
+    const doctors = await Doctor.find(
+        {
+            owner: storeId
+        }
+    )
+
+    if(!doctors){
+        throw new ApiError("Doctors unavailable")
+    }
+
+    return res.status(200)
+              .json(new ApiResponse(200, doctors, "Doctors fetched successfully"))
+})
+
+
+
 export {
     registerUser,
     loginUser,
@@ -398,4 +414,5 @@ export {
     updateContactDetails,
     updateUsername,
     updateStoreDetails,
+    getDoctors
 }

@@ -23,10 +23,10 @@ router.route("/login").post(loginUser)
 
 router.route("/logout").post(verifyJWT, logoutUser)
 router.route("/refresh-token").post(refreshAccessToken)
-router.route("/change-password").post(verifyJWT,changeCurrentPassword)
+router.route("/change-password").post(verifyJWT, isOwner, changeCurrentPassword)
 router.route("/current-user").get(verifyJWT, getCurrentCustomer)
-router.route("/update-account").post(verifyJWT, updateAccountDetails)
-router.route("/update-avatar").post(verifyJWT, updateUserAvatar)
+router.route("/update-account").post(verifyJWT, isOwner, updateAccountDetails)
+router.route("/update-avatar").post(verifyJWT, isOwner, upload.single("avatar"), updateUserAvatar)
 
 
 export default router

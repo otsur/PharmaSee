@@ -9,9 +9,10 @@
 - Store: http://localhost:3000/api/v1/stores
 
 
-
+<br>
+<br>
 ## USER FEATURES
-
+<br>
 ## 1. REGISTRATIONS
 
 ### A.Customer 
@@ -56,6 +57,8 @@
     |---------------|--------|----------|
 
 
+<br>
+<br>
 
 ## 2. LOGIN
 
@@ -69,6 +72,8 @@
 - use email or username
 - fields : username, email, password
 
+<br>
+<br>
 
 ## 3. LOGOUT
 
@@ -78,7 +83,8 @@
 ## B. Store
 - POST/stores/logout
 
-
+<br>
+<br>
 
 ## 4. REFRESH ACCESS TOKEN
 
@@ -88,7 +94,8 @@
 ## B. Store
 - POST/stores/refresh-token
 
-
+<br>
+<br>
 
 
 ## 5. CHANGE PASSWORD

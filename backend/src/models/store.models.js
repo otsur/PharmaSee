@@ -67,7 +67,7 @@ const storeSchema = new Schema(
         },
         password: {
             type: String,
-            required: [true, "Password is mandatory"],
+            required: true,
         },
         refreshToken: {
             type: String

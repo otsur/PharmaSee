@@ -36,3 +36,15 @@ export const verifyJWT = asyncHandler( async(req, res, next) => {
         throw new ApiError(401, error?.message || "Invalid access token")
     }
 })
+
+export const isOwner = asyncHandler( async(req, res, next) => {
+    try {
+        if(req.user?._id.toString() != req.params.userId){
+            throw new ApiError(401, "Unauthorized request")
+        }
+
+        next();
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Unauthorized request")
+    }
+})
