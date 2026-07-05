@@ -34,12 +34,6 @@ const storeSchema = new Schema(
             type: String,
             required: true
         },
-        doctors: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Doctor"
-            }
-        ],
         openTime: {
             type: String,
             required: true

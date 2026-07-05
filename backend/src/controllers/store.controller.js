@@ -401,6 +401,22 @@ const getDoctors = asyncHandler( async(req, res) => {
               .json(new ApiResponse(200, doctors, "Doctors fetched successfully"))
 })
 
+const getStore = asyncHandler( async(req, res) => {
+    const {storeId} = req.params;
+    if(!storeId){
+        throw new ApiError(401, "No request")
+    }
+
+    const store = await Store.findById(storeId).select("-password -refreshToken")
+    if(!store){
+        throw new ApiError(401, "Store not found")
+    }
+
+    return res.status(200)
+              .json(new ApiResponse(200, store, "Store fetched successfully"))
+
+})
+
 
 
 export {
@@ -414,5 +430,6 @@ export {
     updateContactDetails,
     updateUsername,
     updateStoreDetails,
-    getDoctors
+    getDoctors,
+    getStore,
 }

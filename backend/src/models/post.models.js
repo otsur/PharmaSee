@@ -5,14 +5,14 @@ const postSchema = new Schema(
     {
         owner: {
             type: Schema.Types.ObjectId,
-            ref: "Customer"
-        },
-        content: {
-            type: String,
+            ref: "Customer",
             required: true
         },
-        status: {
-            type: Boolean
+        text: {
+            type: String,
+        },
+        image: {
+            type: String
         },
         description: {
             type: String

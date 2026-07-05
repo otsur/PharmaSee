@@ -4,19 +4,25 @@ const responseSchema = new mongoose.Schema(
     {
         post: {
             type: Schema.Types.ObjectId,
-            ref: 'Post'
+            ref: 'Post',
+            requird: true
         },
-        textRequest: {
+        owner: { // owner of a response is a store
             type: Schema.Types.ObjectId,
-            ref: 'TextRequest'
+            ref: 'Store',
+            requird: true
         },
-        owner: {
+        receiver: {
             type: Schema.Types.ObjectId,
-            ref: 'Customer'
+            ref: 'Customer',
+            requird: true
         },
-        store: {
-            type: Schema.Types.ObjectId,
-            ref: 'Store'
+        reponse: {
+            type: Boolean,
+            required: true
+        },
+        reply: {
+            type: String
         }
     },
     {

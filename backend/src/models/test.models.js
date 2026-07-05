@@ -15,8 +15,12 @@ const testSchema = new Schema(
             required: true
         },
         bookingCost: {
-            type: Number,
+            type: String,
             required: true
+        },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: Store
         }
     },
     {

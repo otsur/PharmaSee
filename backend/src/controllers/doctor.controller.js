@@ -38,6 +38,10 @@ const createDoctor = asyncHandler( async(req, res) => {
 
     const store = req.user?._id;
 
+    if(!store){
+        throw new ApiError(401, "Store not found")
+    }
+
     const doctor = await Doctor.create(
         {
             fullName,
@@ -65,28 +69,26 @@ const createDoctor = asyncHandler( async(req, res) => {
               ))
 })
 
-const updateDoctorDetails = asyncHandler( async( req, res) => {
+const updateDoctorDetails = asyncHandler( async( req, res) => { 
+    const doctor = req.model;
+
+    if(!doctor){
+        throw new ApiError(400, "Doctor not found")
+    }
+
     const {fullName,appointmentCost, arrivaltTime, departureTime, activeStatus} = req.body;
 
-    const updates = {};
+    if(Object.keys(req.body).length === 0){
+        throw new ApiError(400, "Some fields are required for updating")
+    }
 
-    if(fullName !== undefined) updates.fullName = fullName;
-    if(appointmentCost !== undefined) updates.appointmentCost = appointmentCost;
-    if(arrivaltTime !== undefined) updates.arrivaltTime = arrivaltTime;
-    if(departureTime !== undefined) updates.departureTime = departureTime;
-    if(activeStatus !== undefined) updates.activeStatus = activeStatus;
+    if(fullName !== undefined) doctor.fullName = fullName;
+    if(appointmentCost !== undefined) doctor.appointmentCost = appointmentCost;
+    if(arrivaltTime !== undefined) doctor.arrivaltTime = arrivaltTime;
+    if(departureTime !== undefined) doctor.departureTime = departureTime;
+    if(activeStatus !== undefined) doctor.activeStatus = activeStatus;
 
-    const doctor = await Doctor.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set: {
-                updates
-            }
-        },
-        {
-            new: true
-        }
-    )
+    await doctor.save();
 
     return res.status(200)
               .json( new ApiResponse(200, doctor, "Doctor details updated successfully"))
@@ -95,20 +97,19 @@ const updateDoctorDetails = asyncHandler( async( req, res) => {
 const updateDoctorContactDetails = asyncHandler(async(req, res) => {
     const {email, phoneNumber} = req.body;
 
-    const updates = {};
+    const doctor = req.model;
+    if(!doctor){
+        throw new ApiError(401, "Doctor not found")
+    }
 
-    if(email !== undefined) updates.email = email;
-    if(phoneNumber !== undefined) updates.phoneNumber = phoneNumber;
+    if(email !== undefined) doctor.email = email;
+    if(phoneNumber !== undefined) doctor.phoneNumber = phoneNumber;
 
-    const doctor = await Doctor.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set: { updates }
-        },
-        {
-            new: true
-        }
-    )
+    if(Object.keys(req.body).length === 0){
+        throw new ApiError(401, "Some fields are required for update")
+    }
+    
+    await doctor.save();
 
     return res.status(200)
               .json( new ApiResponse(200, doctor, "Doctor contact details updated successfully"))
@@ -116,6 +117,11 @@ const updateDoctorContactDetails = asyncHandler(async(req, res) => {
 })
 
 const updateDoctorAvatar = asyncHandler( async(req, res) => {
+    const doctor = req.model;
+    if(!doctor){
+        throw new ApiError(401, "Doctor not found")
+    }
+
     const avatarLocalPath = req.file;
     if(!avatarLocalPath){
         throw new ApiError(401, "Avatar file is required")
@@ -126,22 +132,16 @@ const updateDoctorAvatar = asyncHandler( async(req, res) => {
         throw new ApiError(400, "Something went wrong while uploading on cloudinary")
     }
 
-    const doctor = await Doctor.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set: { avatar }
-        },
-        {
-            new: true
-        }
-    )
+    doctor.avatar = avatar;
+
+    await doctor.save();
 
     return res.status(200)
               .json(new ApiResponse(200, doctor, "Doctor avatar updated successfully"))
 })
 
 const getDoctor = asyncHandler(async(req, res) => {
-    const {docId} = req.params;
+    const {doctorId} = req.params;
 
     if(!docId) {
         throw new ApiError(401, "Unavailable request")
@@ -158,12 +158,12 @@ const getDoctor = asyncHandler(async(req, res) => {
 })
 
 const deleteDoctor = asyncHandler( async(req, res) => {
-    const {doctorId} = req.params;
-    const deleted = await Doctor.findByIdAndDelete(doctorId);
-
-    if(!deleted){
-        throw new ApiError(404, "Doctor not found")
+    const doctor = req.model;
+    if(!doctor){
+        throw new ApiError(401, "Doctor not found")
     }
+
+    await doctor.deleteOne();
 
     return res.status(200)
               .json( new ApiResponse(200, {}, "Doctor deleted successully"))
