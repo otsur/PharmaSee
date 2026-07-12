@@ -5,6 +5,7 @@ import { changeCurrentPassword,
          getCurrentStore, 
          getDoctors, 
          getStore, 
+         getTests, 
          loginUser, 
          logoutUser, 
          refreshAccessToken, 
@@ -32,6 +33,7 @@ router.route("/update-username").post(verifyJWT, updateUsername)
 router.route("/update-store").post(verifyJWT, updateStoreDetails)
 router.route("/:storeId/doctors").get(verifyJWT, getDoctors)
 router.route("/:storeId").get(verifyJWT, getStore);
+router.route("/:storeId/tests").get(verifyJWT, getTests);
 
 
 export default router

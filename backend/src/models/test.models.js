@@ -7,20 +7,22 @@ const testSchema = new Schema(
             required: true,
             unique: true,
         },
-        activeStatus: {
-            type: Boolean
+        isOpen: {
+            type: String,
+            enum: ["true", "flase"],
+            default: "true"
         },
         description: {
             type: String,
             required: true
         },
-        bookingCost: {
+        cost: {
             type: String,
             required: true
         },
         owner: {
             type: Schema.Types.ObjectId,
-            ref: Store
+            ref: "Store"
         }
     },
     {

@@ -6,6 +6,7 @@ import { Doctor } from "../models/doctor.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+import { Test } from "../models/test.models.js";
 
 const generateAccessAndRefreshTokens = async(userId) => {
     try {
@@ -417,6 +418,23 @@ const getStore = asyncHandler( async(req, res) => {
 
 })
 
+const getTests = asyncHandler( async(req, res) => {
+    const {storeId} = req.params;
+
+    const tests = await Test.find(
+        {
+            owner: storeId
+        }
+    )
+
+    if(!tests){
+        throw new ApiError("Tests unavailable")
+    }
+
+    return res.status(200)
+              .json(new ApiResponse(200, tests, "Tests fetched successfully"))
+})
+
 
 
 export {
@@ -432,4 +450,5 @@ export {
     updateStoreDetails,
     getDoctors,
     getStore,
+    getTests
 }

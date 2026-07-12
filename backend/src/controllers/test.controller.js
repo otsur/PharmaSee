@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
 const createTest = asyncHandler(async(req, res) => {
+    
     const { testName, activeStatus, description, cost } = req.body;
 
     if(
@@ -18,10 +19,10 @@ const createTest = asyncHandler(async(req, res) => {
         throw new ApiError(400, "All the fields are required")
     }
 
-    const store = req.user?._id;
+    const owner = req.user?._id;
 
-    if(!store){
-        throw new ApiError(401, "Store not found")
+    if(!owner){
+        throw new ApiError(401, "Unauthorized request")
     }
 
     const test = await Test.create(
@@ -29,7 +30,8 @@ const createTest = asyncHandler(async(req, res) => {
             testName,
             activeStatus,
             description,
-            cost
+            cost,
+            owner
         }
     )
 
@@ -38,6 +40,10 @@ const createTest = asyncHandler(async(req, res) => {
     }
 
     const createdTest = await Test.findById(test._id);
+
+    if(!createdTest) {
+        throw new ApiError(401, "Test couldn't be created")
+    }
 
     return res.status(200)
               .json(new ApiResponse(200, createdTest, "Test created successfully"))

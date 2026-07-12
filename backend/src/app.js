@@ -24,7 +24,7 @@ import testRouter from "./routes/test.routes.js";
 
 app.use("/api/v1/customers", customerRouter);
 app.use("/api/v1/stores", storeRouter);
-app.use("/api/v1/stores", doctorRouter);
+app.use("/api/v1/doctors", doctorRouter);
 app.use("/api/v1/tests", testRouter);
 
 export {app}

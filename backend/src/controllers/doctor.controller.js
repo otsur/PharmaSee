@@ -10,11 +10,11 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 const createDoctor = asyncHandler( async(req, res) => {
     const {fullName, email, phoneNumber, degree, speciality,
-           appointmentCost, arrivaltTime, departureTime, activeStatus} = req.body;
+           appointmentCost, arrivalTime, departureTime, activeStatus} = req.body;
     
     if(
         [fullName, email, phoneNumber, degree, speciality,
-         arrivaltTime, departureTime
+         arrivalTime, departureTime
         ].some((field) => field?.trim() === "")
     ){
         throw new ApiError(400, "All the fields are required")
@@ -24,7 +24,7 @@ const createDoctor = asyncHandler( async(req, res) => {
         throw new ApiError(400, "Presence status of the doctor is required")
     }
 
-    if(appointmentCost === undefined || appointmentCost === isNaN){
+    if(appointmentCost === undefined || Number.isNaN(Number(appointmentCost))){
         throw new ApiError(400, "Please enter a valid cost")
     }
 
@@ -36,9 +36,9 @@ const createDoctor = asyncHandler( async(req, res) => {
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-    const store = req.user?._id;
+    const owner = req.user?._id;
 
-    if(!store){
+    if(!owner){
         throw new ApiError(401, "Store not found")
     }
 
@@ -50,9 +50,10 @@ const createDoctor = asyncHandler( async(req, res) => {
             degree, 
             speciality,
             appointmentCost,
-            arrivaltTime,
+            arrivalTime,
             departureTime,
-            store,
+            owner,
+            activeStatus,
             avatar: avatar?.url || "",
         }
     )
@@ -61,10 +62,16 @@ const createDoctor = asyncHandler( async(req, res) => {
         throw new ApiError(500, "Something went wrong while creating doctor")
     }
 
+    const createdDoctor = await Doctor.findById(doctor._id);
+    if(!createdDoctor){
+        throw new ApiError(401, "Doctor couldn't be created")
+    }
+    
+
     return res.status(200)
               .json( new ApiResponse(
                 200,
-                doctor,
+                createdDoctor,
                 "Doctor created successfully"
               ))
 })
@@ -76,7 +83,7 @@ const updateDoctorDetails = asyncHandler( async( req, res) => {
         throw new ApiError(400, "Doctor not found")
     }
 
-    const {fullName,appointmentCost, arrivaltTime, departureTime, activeStatus} = req.body;
+    const {fullName, appointmentCost, arrivaltTime, departureTime, activeStatus} = req.body;
 
     if(Object.keys(req.body).length === 0){
         throw new ApiError(400, "Some fields are required for updating")
@@ -122,17 +129,17 @@ const updateDoctorAvatar = asyncHandler( async(req, res) => {
         throw new ApiError(401, "Doctor not found")
     }
 
-    const avatarLocalPath = req.file;
+    const avatarLocalPath = req.file?.path;
     if(!avatarLocalPath){
         throw new ApiError(401, "Avatar file is required")
     }
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
-    if(!avatar){
+    if(!avatar.url){
         throw new ApiError(400, "Something went wrong while uploading on cloudinary")
     }
 
-    doctor.avatar = avatar;
+    doctor.avatar = avatar.url;
 
     await doctor.save();
 
@@ -143,11 +150,11 @@ const updateDoctorAvatar = asyncHandler( async(req, res) => {
 const getDoctor = asyncHandler(async(req, res) => {
     const {doctorId} = req.params;
 
-    if(!docId) {
+    if(!doctorId) {
         throw new ApiError(401, "Unavailable request")
     }
 
-    const doctor = await Doctor.findById(docId)
+    const doctor = await Doctor.findById(doctorId)
 
     if(!doctor){
         throw new ApiError(401, "No doctors were found")

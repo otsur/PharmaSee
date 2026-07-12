@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 const doctorSchema = new Schema(
     {
@@ -31,16 +31,17 @@ const doctorSchema = new Schema(
         speciality: {
             type: String
         },
-        activeStatus: {
-            type: Boolean,
-            default: true
+        isPresent: {
+            type: String,
+            enum: ["true", "flase"],
+            default: "true"
         },
         appointmentCost: {
             type: Number,
             required: true,
             trim: true
         },
-        arrivaltTime: {
+        arrivalTime: {
             type: String,
             required: true
         },
@@ -50,7 +51,7 @@ const doctorSchema = new Schema(
         },
         owner: {
             type: Schema.Types.ObjectId,
-            ref: Store
+            ref: "Store"
         }
     },
     {
