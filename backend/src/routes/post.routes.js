@@ -10,3 +10,5 @@ const router = Router();
 
 router.route("/create-post").post(verifyJWT, upload.single("image"), createPost);
 router.route("/create-text-request").post(verifyJWT, createTextRequest);
+
+export default router;

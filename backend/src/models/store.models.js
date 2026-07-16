@@ -65,12 +65,17 @@ const storeSchema = new Schema(
         },
         refreshToken: {
             type: String
+        },
+        fcmToken: {
+            type: String
         }
     },
     {
         timestamps: true
     }
 )
+
+storeSchema.index({ location: "2dsphere" });
 
 storeSchema.pre("save", async function () {
     if(!this.isModified("password")) return;

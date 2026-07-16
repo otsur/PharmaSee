@@ -21,10 +21,12 @@ import customerRouter from "./routes/customer.routes.js";
 import storeRouter from "./routes/store.routes.js";
 import doctorRouter from "./routes/doctor.routes.js";
 import testRouter from "./routes/test.routes.js";
+import postRouter from "./routes/post.routes.js";
 
 app.use("/api/v1/customers", customerRouter);
 app.use("/api/v1/stores", storeRouter);
 app.use("/api/v1/doctors", doctorRouter);
 app.use("/api/v1/tests", testRouter);
+app.use("/api/v1/posts", postRouter);
 
 export {app}
