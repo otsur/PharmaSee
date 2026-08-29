@@ -28,6 +28,7 @@ const createPost = asyncHandler(async (req, res) => {
     }
 
     const parsedCoords = JSON.parse(coordinates);
+    
 
     const imageLocalPath = req.file?.path;
     if (!imageLocalPath) {
